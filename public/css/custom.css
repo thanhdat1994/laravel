@@ -1,0 +1,10 @@
+.glyphicon-chevron-up:before{content:"\e014"}
+
+.glyphicon-chevron-down:before{content:"\e015"}
+
+.select2-container .select2-selection--single {
+    height: 38px;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-top: 2px;
+}
