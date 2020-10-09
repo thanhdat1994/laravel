@@ -38,6 +38,4 @@ Route::prefix('admin')->group(function () {
 Route::get('/statistical', 'StatisticalController@index')->name('statistical');
 Route::post('/statistical/revenue', 'StatisticalController@revenue')->name('statistical.revenue');
 
-Auth::routes();
-
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
