@@ -14,7 +14,7 @@ class CustomerClassController extends Controller
      */
     public function index()
     {
-        $customerClasses = CustomerClass::paginate(5);
+        $customerClasses = CustomerClass::paginate(10);
         return view('customerClass.index', ['customerClasses' => $customerClasses]);
     }
 
@@ -31,65 +31,91 @@ class CustomerClassController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'inputNameCustomerClass' => 'required'
-        ]);
-        $customerClasses = new CustomerClass([
-            'name' => $request->get('inputNameCustomerClass')
-        ]);
-        $customerClasses->save();
-        return redirect('/admin/customer-class');
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'inputNameCustomerClass' => 'required',
+                'inputImage'             => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+            $path = null;
+            if ($request->file('inputImage')) {
+                $imagePath = $request->file('inputImage');
+                $imageName = $imagePath->getClientOriginalName();
+                $path      = $request->file('inputImage')->storeAs('uploads', $imageName, 'public');
+            }
+
+            $customerClasses = new CustomerClass([
+                'name' => $request->get('inputNameCustomerClass'),
+                'path' => $path,
+            ]);
+            $customerClasses->save();
+            return redirect('/admin/customer-class');
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(CustomerClass $customerClass)
     {
-        return view('customerClass.show',compact('customerClass'));
+        return view('customerClass.show', compact('customerClass'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(CustomerClass $customerClass)
     {
-        return view('customerClass.edit',compact('customerClass'));
+        return view('customerClass.edit', compact('customerClass'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'inputNameCustomerClass' => 'required'
-        ]);
-        $customerClasses = CustomerClass::find($id);
-        $customerClasses->name = $request->get('inputNameCustomerClass');
-        $customerClasses->update();
-        return redirect('/admin/customer-class');
+        if ($request->isMethod('patch')) {
+            $request->validate([
+                'inputNameCustomerClass' => 'required',
+                'inputImage'             => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+            $path = $request->get('image');;
+            if ($request->file('inputImage')) {
+                $imagePath = $request->file('inputImage');
+                $imageName = $imagePath->getClientOriginalName();
+                $path      = $request->file('inputImage')->storeAs('uploads', $imageName, 'public');
+            }
+            $customerClasses       = CustomerClass::find($id);
+            $customerClasses->name = $request->get('inputNameCustomerClass');
+            $customerClasses->path = $path;
+            $customerClasses->update();
+            return redirect('/admin/customer-class');
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(CustomerClass $customerClass)

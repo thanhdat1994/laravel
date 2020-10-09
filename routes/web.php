@@ -31,6 +31,8 @@ Route::prefix('admin')->group(function () {
 	Route::resource('/order', 'OrderController');
 	Route::resource('/customer-class', 'CustomerClassController');
 	Route::resource('/expense', 'ExpenseController');
+    Route::post('/category/import', 'CategoryController@import')->name('category.import');
+    Route::get('/export', 'CustomerController@export')->name('export');
 });
 
 Route::get('/statistical', 'StatisticalController@index')->name('statistical');

@@ -21,7 +21,10 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="card-title float-right">
+                    <div class="card-title float-right">
+                        <a type="button" class="btn btn-sm btn-warning" href="{{ route('export') }}"><i class="fas fa-file-export"></i> Export</a>
+                    </div>
+                    <h3 class="card-title float-right mr-2">
                         <a type="button" class="btn btn-sm btn-success" href="{{ route('customer.create') }}"><i class="fas fa-plus"></i> Create</a>
                     </h3>
                 </div>

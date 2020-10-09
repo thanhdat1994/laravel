@@ -8,3 +8,15 @@
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     margin-top: 2px;
 }
+.modal-footer {
+    display: inline;
+}
+.modal-content .modal-body input.form-control {
+    padding: 0.175rem 0.25rem;
+}
+.form-input-file input.form-control {
+    padding: 0.175rem 0.25rem;
+}
+.image-custom {
+    width: 145px;
+}

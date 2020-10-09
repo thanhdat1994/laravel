@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use Illuminate\Http\Request;
+use App\Imports\CategoryImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
@@ -96,5 +98,16 @@ class CategoryController extends Controller
     {
         $category->delete();
         return redirect('/admin/category');
+    }
+
+    /**
+     * @param array $data
+     */
+    public function import(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            Excel::import(new CategoryImport(), $request->file('file'));
+            return redirect('/admin/category')->with('success', 'Import success');
+        }
     }
 }

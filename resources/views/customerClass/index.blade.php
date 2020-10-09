@@ -6,6 +6,10 @@
     <h1>Customer class management</h1>
 @stop
 
+@section('css')
+    <link rel="stylesheet" type="text/css" href="../../css/custom.css">
+@stop
+
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -31,6 +35,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Name</th>
+                            <th>Image</th>
                             <th>Action</th>
                         </tr>
                         </thead>
@@ -39,6 +44,7 @@
                             <tr>
                                 <td>{{ $customerClass->id }}</td>
                                 <td>{{ $customerClass->name }}</td>
+                                <td><img src="{{ $customerClass->path ? Storage::url($customerClass->path) : 'https://via.placeholder.com/135x90?text=Image' }}" class="img-thumbnail img-lg image-custom"></td>
                                 <td>
                                     <form action="{{ route('customer-class.destroy',$customerClass->id) }}" method="POST">
                                         <a type="button" class="btn btn-sm btn-warning" href="{{ route('customer-class.show', $customerClass->id) }}"><i class="fas fa-eye"></i></a>
@@ -55,7 +61,7 @@
                 </div>
             </div>
             <div class="pagination float-right">
-                {{ $customerClasses->links() }}
+{{--                {{ $customerClasses->links() }}--}}
             </div>
         </div>
     </div>

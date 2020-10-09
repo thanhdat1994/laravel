@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Exports\CustomerExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller {
 	/**
@@ -120,4 +122,15 @@ class CustomerController extends Controller {
 		$customer->delete();
 		return redirect('/admin/customer');
 	}
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
+	public function export()
+    {
+        $header = ['ID', 'Name', 'Sex', 'Birthday', 'Address', 'Phone', 'Note', 'Customer Class'];
+        return Excel::download(new CustomerExport(), 'customer.xlsx', null, $header);
+    }
 }
