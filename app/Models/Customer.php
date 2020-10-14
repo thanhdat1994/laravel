@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\SearchTrait;
 
 class Customer extends Model {
-	/**
+
+    use SearchTrait;
+
+    /**
 	 * The table associated with the model.
 	 *
 	 * @var string
@@ -41,6 +45,8 @@ class Customer extends Model {
 	protected $fillable = [
 		'name', 'sex', 'birthday', 'address', 'phone', 'note', 'customer_class_id',
 	];
+
+    protected $search = ['name', 'address', 'phone', 'note'];
 
 	/**
 	 * Get the owning customer class model.

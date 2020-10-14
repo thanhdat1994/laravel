@@ -33,6 +33,7 @@ Route::prefix('admin')->group(function () {
 	Route::resource('/expense', 'ExpenseController');
     Route::post('/category/import', 'CategoryController@import')->name('category.import');
     Route::get('/export', 'CustomerController@export')->name('export');
+    Route::post('customer/search', 'CustomerController@search')->name('customer.search');
 });
 
 Route::get('/statistical', 'StatisticalController@index')->name('statistical');

@@ -13,19 +13,22 @@
                 <div class="card-header">
                     <div class="card-tools float-left">
                         <div class="input-group input-group-sm mt-0">
-                            <input type="text" name="table_search" class="form-control float-right"
-                                   placeholder="Search">
-
+                            <input type="text" name="searchText" id="searchText" class="form-control float-right"
+                                   placeholder="Search...">
+                            @csrf
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                <button type="button" class="btn btn-default" id="searchButton"><i
+                                        class="fas fa-search"></i></button>
                             </div>
                         </div>
                     </div>
                     <div class="card-title float-right">
-                        <a type="button" class="btn btn-sm btn-warning" href="{{ route('export') }}"><i class="fas fa-file-export"></i> Export</a>
+                        <a type="button" class="btn btn-sm btn-warning" href="{{ route('export') }}"><i
+                                class="fas fa-file-export"></i> Export</a>
                     </div>
                     <h3 class="card-title float-right mr-2">
-                        <a type="button" class="btn btn-sm btn-success" href="{{ route('customer.create') }}"><i class="fas fa-plus"></i> Create</a>
+                        <a type="button" class="btn btn-sm btn-success" href="{{ route('customer.create') }}"><i
+                                class="fas fa-plus"></i> Create</a>
                     </h3>
                 </div>
                 <div class="card-body table-responsive p-0">
@@ -56,11 +59,16 @@
                                 <td>{{ $customer->customerClass->name }}</td>
                                 <td>
                                     <form action="{{ route('customer.destroy',$customer->id) }}" method="POST">
-                                        <a type="button" class="btn btn-sm btn-warning" href="{{ route('customer.show', $customer->id) }}"><i class="fas fa-eye"></i></a>
-                                        <a type="button" class="btn btn-sm btn-primary" href="{{ route('customer.edit', $customer->id) }}"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-sm btn-warning"
+                                           href="{{ route('customer.show', $customer->id) }}"><i class="fas fa-eye"></i></a>
+                                        <a type="button" class="btn btn-sm btn-primary"
+                                           href="{{ route('customer.edit', $customer->id) }}"><i
+                                                class="fas fa-edit"></i></a>
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')"><i class="fas fa-trash-alt"></i></button>
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Are you sure?')"><i
+                                                class="fas fa-trash-alt"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -74,4 +82,63 @@
             </div>
         </div>
     </div>
+@stop
+
+@section('js')
+    <script>
+        function load_data(search_query = '') {
+            var _token = $("input[name=_token]").val();
+            $.ajax({
+                url: "{{ route('customer.search') }}",
+                method: "POST",
+                data: {search_query: search_query, _token: _token},
+                dataType: "json",
+                success: function (data) {
+                    var output = '';
+                    if (data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var customer_class = data[i].customer_class_id;
+                            output += '<tr>';
+                            output += '<td>' + data[i].id + '</td>';
+                            output += '<td>' + data[i].name + '</td>';
+                            output += '<td>' + (data[i].sex == 0 ? "Nam" : "Nữ") + '</td>';
+                            output += '<td>' + format_date(data[i].birthday) + '</td>';
+                            output += '<td>' + data[i].address + '</td>';
+                            output += '<td>' + data[i].phone + '</td>';
+                            output += '<td>' + data[i].note + '</td>';
+                            output += '<td>' + data[i].customer_class_id + '</td>';
+                            output += '<td>' + '<form action=""' + ' method="POST">'
+                                + '<a type="button" class="btn btn-sm btn-warning mr-1" href="#"><i class="fas fa-eye"></i></a>'
+                                + '<a type="button" class="btn btn-sm btn-primary mr-1" href="#"><i class="fas fa-edit"></i></a>'
+                                + '<button type="submit" class="btn btn-sm btn-danger mr-1" href="#"><i class="fas fa-trash-alt"></i></button>'
+                                + '</td>';
+                            output += '</tr>';
+                        }
+                    } else {
+                        output += '<tr>';
+                        output += '<td colspan="6">No Data Found</td>';
+                        output += '</tr>';
+                    }
+                    $('tbody').html(output);
+                }
+            });
+        }
+
+        $('#searchButton').click(function () {
+            var search_query = $('#searchText').val();
+            load_data(search_query);
+        });
+
+        function format_date(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [day, month, year].join('/');
+        }
+    </script>
 @stop

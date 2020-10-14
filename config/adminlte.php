@@ -248,7 +248,7 @@ return [
         //            'label'       => 4,
         //            'label_color' => 'success',
         //        ],
-        ['header' => 'product_management'],
+        ['header' => 'PRODUCT MANAGEMENT'],
         [
             'text' => 'Customers',
             'url'  => 'admin/customer',

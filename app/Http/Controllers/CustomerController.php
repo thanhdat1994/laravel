@@ -19,6 +19,14 @@ class CustomerController extends Controller {
 		return view('customer.index', ['customers' => $customers]);
 	}
 
+	public function search(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Customer::search($request->get('search_query'))->get();
+            return response()->json($data);
+        }
+    }
+
 	/**
 	 * Show the form for creating a new resource.
 	 *
